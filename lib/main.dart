@@ -1,11 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kdgaugeview/kdgaugeview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Firebase.initializeApp();
+
+  await dotenv.load(fileName: '.env');
+
+  await Firebase.initializeApp(
+    // Replace with actual values
+    options: FirebaseOptions(
+      apiKey: dotenv.env['API_KEY'] ?? 'API_URL not found',
+      appId: dotenv.env['APP_ID'] ?? 'APP_ID not found',
+      messagingSenderId:
+          dotenv.env['MESSAGE_SENDER_ID'] ?? 'MESSAGE_SENDER_ID not found',
+      projectId: dotenv.env['PROJECT_ID'] ?? 'PROJECT_ID not found',
+    ),
+  );
+  print('-- main: Firebase.initializeApp');
   runApp(const MyApp());
 }
 
@@ -52,10 +66,10 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String title = "Posture Detection App";
-  double _fsrValue1 = 0;
-  double _fsrValue2 = 0;
-  double _fsrValue3 = 0;
-  final databaseReference = FirebaseDatabase.instance.reference();
+  double sensorValue1 = 50.0;
+  double sensorValue2 = 100.0;
+  double sensorValue3 = 150.0;
+  final databaseReference = FirebaseDatabase.instance.ref();
 
   @override
   void initState() {
@@ -68,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void _listenToFSRValue1() {
     databaseReference.child('Sensor/FSR1').onValue.listen((event) {
       setState(() {
-        _fsrValue = event.snapshot.value ?? 0;
+        sensorValue1 = (event.snapshot.value ?? 0) as double;
       });
     });
   }
@@ -76,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void _listenToFSRValue2() {
     databaseReference.child('Sensor/FSR2').onValue.listen((event) {
       setState(() {
-        _fsrValue = event.snapshot.value ?? 0;
+        sensorValue2 = (event.snapshot.value ?? 0) as double;
       });
     });
   }
@@ -84,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void _listenToFSRValue3() {
     databaseReference.child('Sensor/FSR3').onValue.listen((event) {
       setState(() {
-        _fsrValue = event.snapshot.value ?? 0;
+        sensorValue3 = (event.snapshot.value ?? 0) as double;
       });
     });
   }
@@ -104,7 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Container(
                 height: 200,
                 width: 200,
-                padding: EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(16.0),
                 child: KdGaugeView(
                   minSpeed: 0.0,
                   maxSpeed: 250.0,
@@ -115,19 +129,19 @@ class _MyHomePageState extends State<MyHomePage> {
                     fontWeight: FontWeight.bold,
                   ),
                   animate: true,
-                  duration: Duration(seconds: 1),
-                  subDivisionCircleColors: Color(0xFFC41A3B),
-                  divisionCircleColors: Color(0xFF1B1F32),
+                  duration: const Duration(seconds: 1),
+                  subDivisionCircleColors: const Color(0xFFC41A3B),
+                  divisionCircleColors: const Color(0xFF1B1F32),
                   fractionDigits: 2,
-                  activeGaugeColor: Color(0xFFC41A3B),
+                  activeGaugeColor: const Color(0xFFC41A3B),
                   innerCirclePadding: 16.0,
                   unitOfMeasurement: "",
-                  unitOfMeasurementTextStyle: TextStyle(
+                  unitOfMeasurementTextStyle: const TextStyle(
                     color: Color(0xFFC41A3B),
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
                   ),
-                  minMaxTextStyle: TextStyle(
+                  minMaxTextStyle: const TextStyle(
                     color: Color(0xFFC41A3B),
                     fontSize: 12.0,
                     fontWeight: FontWeight.bold,
@@ -138,7 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Container(
                 height: 200,
                 width: 200,
-                padding: EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(16.0),
                 child: KdGaugeView(
                   minSpeed: 0.0,
                   maxSpeed: 250.0,
@@ -149,19 +163,19 @@ class _MyHomePageState extends State<MyHomePage> {
                     fontWeight: FontWeight.bold,
                   ),
                   animate: true,
-                  duration: Duration(seconds: 1),
-                  subDivisionCircleColors: Color(0xFFC41A3B),
-                  divisionCircleColors: Color(0xFF1B1F32),
+                  duration: const Duration(seconds: 1),
+                  subDivisionCircleColors: const Color(0xFFC41A3B),
+                  divisionCircleColors: const Color(0xFF1B1F32),
                   fractionDigits: 2,
-                  activeGaugeColor: Color(0xFFC41A3B),
+                  activeGaugeColor: const Color(0xFFC41A3B),
                   innerCirclePadding: 16.0,
                   unitOfMeasurement: "",
-                  unitOfMeasurementTextStyle: TextStyle(
+                  unitOfMeasurementTextStyle: const TextStyle(
                     color: Color(0xFFC41A3B),
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
                   ),
-                  minMaxTextStyle: TextStyle(
+                  minMaxTextStyle: const TextStyle(
                     color: Color(0xFFC41A3B),
                     fontSize: 12.0,
                     fontWeight: FontWeight.bold,
@@ -172,7 +186,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Container(
                 height: 200,
                 width: 200,
-                padding: EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(16.0),
                 child: KdGaugeView(
                   minSpeed: 0.0,
                   maxSpeed: 250.0,
@@ -183,19 +197,19 @@ class _MyHomePageState extends State<MyHomePage> {
                     fontWeight: FontWeight.bold,
                   ),
                   animate: true,
-                  duration: Duration(seconds: 1),
-                  subDivisionCircleColors: Color(0xFFC41A3B),
-                  divisionCircleColors: Color(0xFF1B1F32),
+                  duration: const Duration(seconds: 1),
+                  subDivisionCircleColors: const Color(0xFFC41A3B),
+                  divisionCircleColors: const Color(0xFF1B1F32),
                   fractionDigits: 2,
-                  activeGaugeColor: Color(0xFFC41A3B),
+                  activeGaugeColor: const Color(0xFFC41A3B),
                   innerCirclePadding: 16.0,
                   unitOfMeasurement: "",
-                  unitOfMeasurementTextStyle: TextStyle(
+                  unitOfMeasurementTextStyle: const TextStyle(
                     color: Color(0xFFC41A3B),
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
                   ),
-                  minMaxTextStyle: TextStyle(
+                  minMaxTextStyle: const TextStyle(
                     color: Color(0xFFC41A3B),
                     fontSize: 12.0,
                     fontWeight: FontWeight.bold,
