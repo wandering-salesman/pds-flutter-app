@@ -19,7 +19,7 @@ void main() async {
       projectId: dotenv.env['PROJECT_ID'] ?? 'PROJECT_ID not found',
     ),
   );
-  print('-- main: Firebase.initializeApp');
+  // print('-- main: Firebase.initializeApp');
   runApp(const MyApp());
 }
 
