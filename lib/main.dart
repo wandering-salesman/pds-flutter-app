@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:kdgaugeview/kdgaugeview.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -48,9 +52,42 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String title = "Posture Detection App";
-  double sensorValue1 = 50.0;
-  double sensorValue2 = 100.0;
-  double sensorValue3 = 150.0;
+  double _fsrValue1 = 0;
+  double _fsrValue2 = 0;
+  double _fsrValue3 = 0;
+  final databaseReference = FirebaseDatabase.instance.reference();
+
+  @override
+  void initState() {
+    super.initState();
+    _listenToFSRValue1();
+    _listenToFSRValue2();
+    _listenToFSRValue3();
+  }
+
+  void _listenToFSRValue1() {
+    databaseReference.child('Sensor/FSR1').onValue.listen((event) {
+      setState(() {
+        _fsrValue = event.snapshot.value ?? 0;
+      });
+    });
+  }
+
+  void _listenToFSRValue2() {
+    databaseReference.child('Sensor/FSR2').onValue.listen((event) {
+      setState(() {
+        _fsrValue = event.snapshot.value ?? 0;
+      });
+    });
+  }
+
+  void _listenToFSRValue3() {
+    databaseReference.child('Sensor/FSR3').onValue.listen((event) {
+      setState(() {
+        _fsrValue = event.snapshot.value ?? 0;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
